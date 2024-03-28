@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +10,29 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <?php if(isset($_SESSION["username"])): ?>
+        <h1>Welcome, <?php echo $_SESSION["username"]; ?></h1>
+        <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+        <input type="submit" name="logout" value="logout">
+        </form>
+    <?php else: ?>
+        <h1>Welcome, Visitor</h1>
+        <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+        <input type="submit" name="login" value="login">
+        </form>
+    <?php endif; ?>
+
+    <?php
+        if(isset($_POST["logout"])){
+            session_destroy();
+            header("Location: ".$_SERVER['PHP_SELF']); // Redirect to current page after logout
+            exit();
+        }
+        elseif(isset($_POST["login"])){
+            header("Location: login.html");
+            exit();
+        }
+    ?>
+
 </body>
 </html>

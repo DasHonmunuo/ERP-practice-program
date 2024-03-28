@@ -7,14 +7,13 @@
 </head>
 <body>
     <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
-        <h2>Register</h2>
+        <h2>Login</h2>
         Username <br>
         <input type="text" name="username"><br>
         Password <br>
-        <input type="password" name="password1"><br>
-        Retype password <br>
-        <input type="password" name="password2"><br>
-        <input type="submit" name="submit" value="register">
+        <input type="password" name="password"><br>
+        <input type="submit" name="submit" value="login"><br>
+        No account? Register <a href="register.html">here</a> 
     </form>
 </body>
 </html>
@@ -22,25 +21,20 @@
 <?php
     if($_SERVER["REQUEST_METHOD"]=="POST"){
         $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_SPECIAL_CHARS);
-        $password1 = filter_input(INPUT_POST, "password1", FILTER_SANITIZE_SPECIAL_CHARS);
-        $password2 = filter_input(INPUT_POST, "password2", FILTER_SANITIZE_SPECIAL_CHARS);
+        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
         
         require_once 'Classes/User.php';
         
         if(empty($username)){
             echo"Please enter a username";
         }
-        elseif(empty($password1)){
+        elseif(empty($password)){
             echo"Please enter a password";
         }
-        elseif($password1 != $password2){
-            echo"Passwords do not match";
-        }
         else{
-            $user = new User($username, $password2);
-            $user->register();
+            $user = new User($username, $password);
+            $user->login();
         }
 
         mysqli_close($conn);
     }
-?>
