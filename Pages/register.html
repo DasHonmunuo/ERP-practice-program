@@ -25,7 +25,7 @@
         $password1 = filter_input(INPUT_POST, "password1", FILTER_SANITIZE_SPECIAL_CHARS);
         $password2 = filter_input(INPUT_POST, "password2", FILTER_SANITIZE_SPECIAL_CHARS);
         
-        require_once 'Classes/User.php';
+        require_once '../Classes/User.php';
         
         if(empty($username)){
             echo"Please enter a username";
