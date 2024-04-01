@@ -8,65 +8,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="../script.js"></script>
 </head>
 <body>
-    <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
-        <h2>Add Employee</h2>
-        First Name <br>
-        <input type="text" name="first_name"><br>
-        Last Name <br>
-        <input type="text" name="last_name"><br>
-        Email <br>
-        <input type="text" name="email"><br>
-        Birthday <br>
-        <input type="date" name="birthday"><br>
-        Address <br>
-        <input type="text" name="address"><br>
-        <!-- departments dropdown -->
-        Department <br>
-        <select>  
-            <option value="">--- Select ---</option>  
-            <?php  
-                $sql = "SELECT department_id, department_name FROM departments";
-                $dep_list = mysqli_query($conn, $sql);
-                if(mysqli_num_rows($dep_list)>0){
-                    while($row = mysqli_fetch_assoc($dep_list)){        
-            ?>  
-                <option value="<?php echo $row['department_id']; ?>">  
-                    <?php echo $row['department_name']; ?>  
-                </option>  
-            <?php  
-                }
-            }    
-            ?>  
-        </select> <br>
-        Position <br>
-        <input type="text" name="postion"><br>
-        Salary <br>
-        <input type="number" name="salary" step="0.01" min="0"><br>
-        <!-- manager dropdown -->
-        Manager <br>
-        <select>  
-            <option value="">--- Select ---</option>  
-            <?php  
-                $sql = "SELECT manager_id, manager_first_name, manager_last_name FROM managers";
-                $mang_list = mysqli_query($conn, $sql);
-                if(mysqli_num_rows($mang_list)>0){
-                    while($row = mysqli_fetch_assoc($mang_list)){        
-            ?>  
-                <option value="<?php echo $row['manager_id']; ?>">  
-                    <?php echo $row['manager_first_name'] . " " . $row['manager_last_name'];?>  
-                </option>  
-            <?php  
-                }
-            }    
-            ?>  
-        </select> <br>
-        Status <br>
-        <input type="radio" name="status" value="Active">Active<br>
-        <input type="radio" name="status" value="Inactive">Inactive<br>
-        <input type="submit" name="submit" value="add">         
-    </form>
+    <h1>Manage Employee</h1>
+    <!-- Add Employee -->
+    <button onclick="toggleDiv('add_employee')">Add Employee</button>
+    <div id="add_employee" style="display: none;">
+        <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+            <h2>Add Employee</h2>
+            First Name <br>
+            <input type="text" name="first_name"><br>
+            Last Name <br>
+            <input type="text" name="last_name"><br>
+            Email <br>
+            <input type="text" name="email"><br>
+            Birthday <br>
+            <input type="date" name="birthday"><br>
+            Address <br>
+            <input type="text" name="address"><br>
+            <!-- departments dropdown -->
+            Department <br>
+            <select>  
+                <option value="">--- Select ---</option>  
+                <?php  
+                    $sql = "SELECT department_id, department_name FROM departments";
+                    $dep_list = mysqli_query($conn, $sql);
+                    if(mysqli_num_rows($dep_list)>0){
+                        while($row = mysqli_fetch_assoc($dep_list)){        
+                ?>  
+                    <option value="<?php echo $row['department_id']; ?>">  
+                        <?php echo $row['department_name']; ?>  
+                    </option>  
+                <?php  
+                    }
+                }    
+                ?>  
+            </select> <br>
+            Position <br>
+            <input type="text" name="postion"><br>
+            Salary <br>
+            <input type="number" name="salary" step="0.01" min="0"><br>
+            <!-- manager dropdown -->
+            Manager <br>
+            <select>  
+                <option value="">--- Select ---</option>  
+                <?php  
+                    $sql = "SELECT manager_id, manager_first_name, manager_last_name FROM managers";
+                    $mang_list = mysqli_query($conn, $sql);
+                    if(mysqli_num_rows($mang_list)>0){
+                        while($row = mysqli_fetch_assoc($mang_list)){        
+                ?>  
+                    <option value="<?php echo $row['manager_id']; ?>">  
+                        <?php echo $row['manager_first_name'] . " " . $row['manager_last_name'];?>  
+                    </option>  
+                <?php  
+                    }
+                }    
+                ?>  
+            </select> <br>
+            Status <br>
+            <input type="radio" name="status" value="Active">Active<br>
+            <input type="radio" name="status" value="Inactive">Inactive<br>
+            <input type="submit" name="submit" value="add">         
+        </form>
+    </div>
 </body>
 </html>
 
