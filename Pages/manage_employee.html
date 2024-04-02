@@ -19,7 +19,7 @@
             <button name="search_button" type="button" onclick="toggleDiv('search_employee'); toggleDivOff('add_employee')">Search Employee</button>
         </div>
         <div id="add_employee" class="segment" style="display: none;">
-            <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+            <form id="add_form" action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
                 <h2>Add Employee</h2>
                 First Name <br>
                 <input type="text" name="first_name"><br>
@@ -74,91 +74,97 @@
                 Status <br>
                 <input type="radio" name="status" value="Active">Active<br>
                 <input type="radio" name="status" value="Inactive">Inactive<br>
-                <input type="submit" name="submit" value="add">         
+                <input type="submit" name="add" value="add">         
             </form>
-            <?php
-                if($_SERVER["REQUEST_METHOD"]=="POST"){
-                    $first_name = filter_input(INPUT_POST, "first_name", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $last_name = filter_input(INPUT_POST, "last_name", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $birthday = filter_input(INPUT_POST, "birthday", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $address = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $department_id = filter_input(INPUT_POST, "department", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $position = filter_input(INPUT_POST, "position", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $salary = filter_input(INPUT_POST, "salary", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $manager_id = filter_input(INPUT_POST, "manager", FILTER_SANITIZE_SPECIAL_CHARS);
-                    $status = filter_input(INPUT_POST, "status", FILTER_SANITIZE_SPECIAL_CHARS);
-                    
-                    require_once '../Classes/Employee.php';
-                    
-                    if (empty($first_name) || empty($last_name) || empty($email) || empty($birthday) || empty($address) || empty($department_id) || empty($position) || empty($salary) || empty($manager_id) || empty($status)) {
-                        echo "Please fill in all fields.";
-                    }
-                    else{
-                        $employee = new Employee($first_name,$last_name,$email,$birthday,$address,$department_id,$position,$salary,$manager_id,$status);
-                        $employee->add_employee();
-                    }
-                }
-            ?>
-            <script>event.preventDefault();</script>
         </div>
         <div id="search_employee" class="segment" style="display: none;">
-            <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
+            <form id="search_form"action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
                 <h2>Search Employee</h2>
                 First Name <br>
                 <input type="text" name="first_name"><br>
                 Last Name <br>
                 <input type="text" name="last_name"><br>
-                <input type="submit" name="submit" value="search">
-                <br>
-                <?php
-                    if($_SERVER["REQUEST_METHOD"]=="POST"){
-                        $first_name = filter_input(INPUT_POST, "first_name", FILTER_SANITIZE_SPECIAL_CHARS);
-                        $last_name = filter_input(INPUT_POST, "last_name", FILTER_SANITIZE_SPECIAL_CHARS);
-                        
-                        require_once '../Classes/Employee.php';
-                        
-                        if(empty($first_name)){
-                            echo"Please enter the first name";
-                        }
-                        elseif(empty($last_name)){
-                            echo"Please enter the last name";
-                        }
-                        else{
-                            $employee = new Employee($first_name,$last_name,$email,$birthday,$address,$department_id,$position,$salary,$manager_id,$status);
-                            $results = $employee->search_employee();
-
-                            // Check if there are any results
-                            if(mysqli_num_rows($results) > 0) {
-                                // Loop through the results and display each employee's information
-                                while($row = mysqli_fetch_assoc($results)) {
-                                    // Output employee information
-                                    echo "Employee ID: " . $row['emp_id'] . "<br>";
-                                    echo "First Name: " . $row['first_name'] . "<br>";
-                                    echo "Last Name: " . $row['last_name'] . "<br>";
-                                    echo "Email: " . $row['email'] . "<br>";
-                                    echo "Birthday: " . $row['birthday'] . "<br>";
-                                    echo "Address: " . $row['address'] . "<br>";
-                                    echo "Department ID: " . $row['department_id'] . "<br>";
-                                    echo "Position: " . $row['position'] . "<br>";
-                                    echo "Date Joined: " . $row['datetime_joined'] . "<br>";
-                                    echo "Salary: " . $row['salary'] . "<br>";
-                                    echo "Manager ID: " . $row['manager_id'] . "<br>";
-                                    echo "Status: " . $row['status'] . "<br><br>";
-                                }
-                            } else {
-                                echo "No results found.";
-                            }
-                        }
-                    }
-                ?>      
+                <input type="submit" name="search" value="search">
+                <br>      
             </form>
-            <script>event.preventDefault();</script>
         </div>
     </div>
 </body>
 </html>
 
 <?php
+    if($_SERVER["REQUEST_METHOD"]=="POST"){
+        if(isset($_POST['add'])) {
+            $first_name = filter_input(INPUT_POST, "first_name", FILTER_SANITIZE_SPECIAL_CHARS);
+            $last_name = filter_input(INPUT_POST, "last_name", FILTER_SANITIZE_SPECIAL_CHARS);
+            $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_SPECIAL_CHARS);
+            $birthday = filter_input(INPUT_POST, "birthday", FILTER_SANITIZE_SPECIAL_CHARS);
+            $address = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
+            $department_id = filter_input(INPUT_POST, "department", FILTER_SANITIZE_SPECIAL_CHARS);
+            $position = filter_input(INPUT_POST, "position", FILTER_SANITIZE_SPECIAL_CHARS);
+            $salary = filter_input(INPUT_POST, "salary", FILTER_SANITIZE_SPECIAL_CHARS);
+            $manager_id = filter_input(INPUT_POST, "manager", FILTER_SANITIZE_SPECIAL_CHARS);
+            $status = filter_input(INPUT_POST, "status", FILTER_SANITIZE_SPECIAL_CHARS);
+            
+            require_once '../Classes/Employee.php';
+            
+            if (empty($first_name) || empty($last_name) || empty($email) || empty($birthday) || empty($address) || empty($department_id) || empty($position) || empty($salary) || empty($manager_id) || empty($status)) {
+                echo "Please fill in all fields.";
+            }
+            else{
+                $employee = new Employee($first_name,$last_name,$email,$birthday,$address,$department_id,$position,$salary,$manager_id,$status);
+                $employee->add_employee();
+            }   
+        }
+        if(isset($_POST['search'])) {
+            $first_name = filter_input(INPUT_POST, "first_name", FILTER_SANITIZE_SPECIAL_CHARS);
+            $last_name = filter_input(INPUT_POST, "last_name", FILTER_SANITIZE_SPECIAL_CHARS);
+            
+            $email = "";
+            $birthday = "";
+            $address = "";
+            $department_id = "";
+            $position = "";
+            $salary = "";
+            $manager_id = "";
+            $status = "";
+
+            require_once '../Classes/Employee.php';
+            
+            if(empty($first_name)){
+                echo"Please enter the first name";
+            }
+            elseif(empty($last_name)){
+                echo"Please enter the last name";
+            }
+            else{
+                $employee = new Employee($first_name,$last_name,$email,$birthday,$address,$department_id,$position,$salary,$manager_id,$status);
+                $results = $employee->search_employee();
+                
+                // Check if there are any results
+                if(mysqli_num_rows($results) > 0) {
+                    // Loop through the results and display each employee's information
+                    while($row = mysqli_fetch_assoc($results)) {
+                        // Output employee information
+                        echo "Employee ID: " . $row['emp_id'] . "<br>";
+                        echo "First Name: " . $row['first_name'] . "<br>";
+                        echo "Last Name: " . $row['last_name'] . "<br>";
+                        echo "Email: " . $row['email'] . "<br>";
+                        echo "Birthday: " . $row['birthday'] . "<br>";
+                        echo "Address: " . $row['address'] . "<br>";
+                        echo "Department ID: " . $row['department_id'] . "<br>";
+                        echo "Position: " . $row['position'] . "<br>";
+                        echo "Date Joined: " . $row['datetime_joined'] . "<br>";
+                        echo "Salary: " . $row['salary'] . "<br>";
+                        echo "Manager ID: " . $row['manager_id'] . "<br>";
+                        echo "Status: " . $row['status'] . "<br><br>";
+                    }
+                } else {
+                    echo "No results found.";
+                }
+            }
+        } 
+    }
+
     mysqli_close($conn);
 ?>
