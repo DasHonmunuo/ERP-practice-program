@@ -7,3 +7,8 @@ function toggleDiv(divId) {
         div.style.display = "none";
     }
 }
+
+function toggleDivOff(divId) {
+    var div = document.getElementById(divId);
+    div.style.display = "none";
+}
